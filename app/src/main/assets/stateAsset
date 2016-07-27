@@ -1,5 +1,6 @@
 {
   "debug": "true",
-  "saveLog": "true"
-  "debugLevel": "3"
+  "saveLog": "true",
+  "debugLevel": 3,
+  "otro" : 42
 }

@@ -2,7 +2,8 @@ package gmontenegro.toolbox;
 
 import android.os.Bundle;
 import android.widget.TextView;
-import gmontenegro.toolboxlib.Tools.BaseManager;
+
+import Elements.BaseActivity;
 import gmontenegro.toolboxlib.Tools.LogManager;
 import gmontenegro.toolboxlib.Tools.PermissionManager;
 
@@ -18,5 +19,9 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         logView = (TextView)findViewById(R.id.logView);
         logView.setText(LogManager.getLog());
+
+        LogManager.debug("Prueba" + LocalSettingManager.getLocalState().otro);
+        LogManager.warn("Warning");
+
     }
 }
