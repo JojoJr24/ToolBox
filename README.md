@@ -17,6 +17,7 @@ dependencies {
     compile 'gmontenegro:toolboxlib:0.0.1'
 }
 
+ # SettingsManager
 
 En la carpeta de Assets de la applicación hay que agregar un archivo statAsset que contenga un JSon
 donde los siguientes parametros son obligatorios
@@ -26,6 +27,7 @@ donde los siguientes parametros son obligatorios
   "saveLog": "true"
   "debugLevel": "3"
 }
+
 
 Si se requieren mas parametros por default deben agregarse al archivo y sobrecargar la clase
 DefaultSettings con las variables de los nuevos parametros.
