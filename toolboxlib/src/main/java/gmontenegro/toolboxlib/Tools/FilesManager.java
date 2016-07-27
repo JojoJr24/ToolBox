@@ -60,7 +60,7 @@ public class FilesManager extends BaseManager{
 
             objectOutputStream.writeUTF(text);
             objectOutputStream.close();
-            objectOutputStream.flush();
+
 
         } catch (IOException e) {
             LogManager.error(e,"Filemanager");

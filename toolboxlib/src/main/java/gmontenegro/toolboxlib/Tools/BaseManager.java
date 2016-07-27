@@ -8,8 +8,9 @@ import android.content.Context;
  */
 public class BaseManager {
 
-    static Activity activity;
-    static Context context;
+    protected static Activity activity;
+    protected static Context context;
+
 
     public static void initManagers(Activity pActivity)
     {

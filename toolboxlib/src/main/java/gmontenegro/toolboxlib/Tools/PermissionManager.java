@@ -68,6 +68,7 @@ public class PermissionManager  extends BaseManager{
         if(permissionsNeeded.isEmpty())
             return true;
 
+
         boolean permissionRationaleNeeded = false;
         for (String permission: permissionsNeeded) {
             if (activity.shouldShowRequestPermissionRationale(permission))

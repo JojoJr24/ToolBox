@@ -1,0 +1,29 @@
+Para subir una nueva versión al BinTRay
+
+Entrar en Bintray con el usuario JojoJr24
+Ir al proyecto
+Agruegar una nueva versión
+Cambiar en ToolboxLib el numero de versión
+Ejecutar en la linea de comandos -> gradlew bintrayUpload
+
+
+Para subir a GitHub
+Grafico
+Se puede subir desde el android studio
+Click derecho en el proyecto, Git
+Primero commit y luego Push
+
+Linea de comandos
+Desde el directorio abrir Git Bash
+
+git commit -m "Descripcion"
+
+git remote add origin remote https://github.com/Jojojr24/Toolbox.git
+
+git push -u origin master
+
+Para bajar de gitHub
+Grafico Trivial
+
+Linea de comandos
+git pull (si da error entonces agruegar: origin master --allow-unrelated-histories)

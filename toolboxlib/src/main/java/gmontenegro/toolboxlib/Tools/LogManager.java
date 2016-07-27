@@ -11,6 +11,11 @@ import java.security.ProviderException;
  */
 public class LogManager extends BaseManager{
 
+    private static final int LEVEL_VERBOSE = 3;
+    private static final int LEVEL_PROBLEMS = 2;
+    private static final int LEVEL_ERRORS = 1;
+    private static final int LEVEL_OFF = 0;
+
     private static final String TEXT_LINE_DELIMITER = " - ";
 
     final static String TAG = "APPLICATIONTAG";
@@ -21,15 +26,19 @@ public class LogManager extends BaseManager{
      * Muestra el dato pero no lo guarda , solo para debug
      */
     public static final void debug(Object... data) {
-        StringBuilder reportData = new StringBuilder();
-        reportData.append("Method: ").append(getMethodName()).append(TEXT_LINE_DELIMITER);
+        if(SettingsManager.getDefaultState().debugLevel == LEVEL_VERBOSE) {
+            StringBuilder reportData = new StringBuilder();
+            reportData.append("Method: ").append(getMethodName()).append(TEXT_LINE_DELIMITER);
 
-        for (int i = 0; i < data.length; i++) {
-            reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
+            for (int i = 0; i < data.length; i++) {
+                reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
+            }
+
+            if (SettingsManager.getDefaultState().debug)
+                Log.d(TAG, reportData.toString());
+            if (SettingsManager.getDefaultState().saveLog)
+                FilesManager.saveText(FILELOG, getTime() + " " + reportData.toString() + "\n", true);
         }
-
-        if (SettingsManager.getState().debug)
-            Log.d(TAG, reportData.toString());
 
     }
 
@@ -38,16 +47,18 @@ public class LogManager extends BaseManager{
      * Muestra el warning y lo guarda solo si esta activado y el viene de un descendinete de context
      */
     public static final void warn(Object... data) {
-        StringBuilder reportData = new StringBuilder();
-        reportData.append("Method: ").append(getMethodName()).append(TEXT_LINE_DELIMITER);
+        if(SettingsManager.getDefaultState().debugLevel >= LEVEL_PROBLEMS) {
+            StringBuilder reportData = new StringBuilder();
+            reportData.append("Method: ").append(getMethodName()).append(TEXT_LINE_DELIMITER);
 
-        for (int i = 0; i < data.length; i++) {
-            reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
+            for (int i = 0; i < data.length; i++) {
+                reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
+            }
+            if (SettingsManager.getDefaultState().debug)
+                Log.w(TAG, reportData.toString());
+            if (SettingsManager.getDefaultState().saveLog)
+                FilesManager.saveText(FILELOG, getTime() + " " + reportData.toString() + "\n", true);
         }
-        if (SettingsManager.getState().debug)
-            Log.w(TAG, reportData.toString());
-        if (SettingsManager.getState().saveLog && context != null)
-            FilesManager.saveText( FILELOG, getTime() + " " + reportData.toString() + "\n", true);
     }
 
 
@@ -56,31 +67,34 @@ public class LogManager extends BaseManager{
      */
     public static final void error( Throwable e, Object... data) {
 
-
-        StringBuilder reportData = new StringBuilder();
-        reportData.append("Method: ").append(getMethodName()).append(TEXT_LINE_DELIMITER);
-        if (SettingsManager.getState().debug)
-            Log.e(TAG, reportData.toString(), e);
-        if (SettingsManager.getState().saveLog)
-            FilesManager.saveText( FILELOG, getTime() + " "
-                    + reportData.toString() + " "
-                    + e.getMessage() + " "
-                    + e.getCause() + " "
-                    + "\n", true);
+        if(SettingsManager.getDefaultState().debugLevel >= LEVEL_ERRORS) {
+            StringBuilder reportData = new StringBuilder();
+            reportData.append("Method: ").append(getMethodName()).append(TEXT_LINE_DELIMITER);
+            if (SettingsManager.getDefaultState().debug)
+                Log.e(TAG, reportData.toString(), e);
+            if (SettingsManager.getDefaultState().saveLog)
+                FilesManager.saveText(FILELOG, getTime() + " "
+                        + reportData.toString() + " "
+                        + e.getMessage() + " "
+                        + e.getCause() + " "
+                        + "\n", true);
+        }
     }
 
     public static final void error( ProviderException e, Object... data) {
 
-        StringBuilder reportData = new StringBuilder();
-        reportData.append("Method: ").append(getMethodName()).append(TEXT_LINE_DELIMITER);
-        if (SettingsManager.getState().debug)
-            Log.e(TAG, reportData.toString(), e);
-        if (SettingsManager.getState().saveLog)
-            FilesManager.saveText( FILELOG, getTime() + " "
-                    + reportData.toString() + " "
-                    + e.getMessage() + " "
-                    + e.getCause() + " "
-                    + "\n", true);
+        if(SettingsManager.getDefaultState().debugLevel >= LEVEL_ERRORS) {
+            StringBuilder reportData = new StringBuilder();
+            reportData.append("Method: ").append(getMethodName()).append(TEXT_LINE_DELIMITER);
+            if (SettingsManager.getDefaultState().debug)
+                Log.e(TAG, reportData.toString(), e);
+            if (SettingsManager.getDefaultState().saveLog)
+                FilesManager.saveText(FILELOG, getTime() + " "
+                        + reportData.toString() + " "
+                        + e.getMessage() + " "
+                        + e.getCause() + " "
+                        + "\n", true);
+        }
     }
 
     /**
