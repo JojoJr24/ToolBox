@@ -1,0 +1,66 @@
+apply plugin: 'com.android.library'
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'Toolbox'
+
+    publishedGroupId = 'gmontenegro'
+    libraryName = 'ToolBox'
+    artifact = 'toolboxlib'
+
+    libraryDescription = 'A bundle of basic tools for comercial apps development'
+
+    siteUrl = 'https://github.com/Jojojr24/ToolBox'
+    gitUrl = 'https://github.com/Jojojr24/Toolbox.git'
+
+    libraryVersion = '0.0.1'
+
+    developerId = 'Jojojr24'
+    developerName = 'Montenegro Guillermo'
+    developerEmail = 'guillermo.j.montenegro2@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "0.0.1"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    repositories {
+        maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.2.0'
+
+    //////////////GSON
+    compile 'com.google.code.gson:gson:2.2.4'
+    //////////////
+    //////////////KSOAP
+    compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
+    /////////////////////////
+    ///////////////BINTRAY
+    compile 'com.inthecheesefactory.thecheeselibrary:fb-like:0.9.3'
+    ///////////////////////////////
+}
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

@@ -1,0 +1,11 @@
+package gmontenegro.toolboxlib.Tools;
+
+/**
+ * Created by gmontenegro on 26/07/2016.
+ */
+public class DefaultSettings {
+
+    public boolean debug = false;
+    public boolean saveLog = false;
+    public int debugLevel= 0;
+}

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ToolBox</string>
+    <string name="rw_permission">Necesito el permiso</string>
+</resources>
