@@ -139,4 +139,9 @@ public class LogManager extends BaseManager{
         return FilesManager.loadText( FILELOG);
     }
 
+    public static void deleteLog()
+    {
+        FilesManager.deleteFile(FILELOG);
+    }
+
 }

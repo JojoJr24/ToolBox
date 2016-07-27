@@ -56,10 +56,8 @@ public class FilesManager extends BaseManager{
         {
             FileOutputStream fileOutputStream = context.openFileOutput(filename
                     , append?Context.MODE_APPEND : Context.MODE_PRIVATE);
-            ObjectOutputStream objectOutputStream= new ObjectOutputStream(fileOutputStream);
-
-            objectOutputStream.writeUTF(text);
-            objectOutputStream.close();
+            fileOutputStream.write(text.getBytes());
+            fileOutputStream.close();
 
 
         } catch (IOException e) {
@@ -72,14 +70,21 @@ public class FilesManager extends BaseManager{
 
     public static String loadText(String filename)
     {
-        String ret;
+        String ret="";
         try
         {
             FileInputStream fileInputStream  = context.openFileInput(filename);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-            ret = ((String)objectInputStream.readUTF());
-            objectInputStream.close();
+            int i = 0;
+            char c;
+            // read till the end of the file
+            while((i=fileInputStream.read())!=-1)
+            {
+                // converts integer to character
+                c=(char)i;
+
+                ret = ret + c;
+            }
 
             return ret;
         }
@@ -91,42 +96,21 @@ public class FilesManager extends BaseManager{
 
     public static  void saveTextEncrypted(String filename , String text , boolean append)
     {
-        try
-        {
-
-            FileOutputStream fileOutputStream = context.openFileOutput(filename
-                    , append?Context.MODE_PRIVATE |Context.MODE_APPEND : Context.MODE_PRIVATE);
-            ObjectOutputStream objectOutputStream= new ObjectOutputStream(fileOutputStream);
-
-            objectOutputStream.writeObject(EncriptionManager.encrypt("PASSWORD",text));
-            objectOutputStream.close();
-
-
-        } catch (IOException e) {
-            LogManager.error(e, "FilesManager");
-        }
-
+            saveText(filename, EncriptionManager.encrypt("PASSWORD",text), append);
     }
 
 
 
     public static String loadTextDecrypted(String filename)
     {
-        String ret;
-        try
-        {
-            FileInputStream fileInputStream  = context.openFileInput(filename);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-            ret = ((String)objectInputStream.readObject());
-            objectInputStream.close();
-            return ret;
-        }
-        catch(Exception e) {
-            LogManager.error(e, "Filemanager");
-            return null;
-        }
+        return  EncriptionManager.decrypt("PASSWORD",loadText(filename)) ;
     }
 
+
+    public static void deleteFile(String filename)
+    {
+        context.deleteFile(filename);
+    }
 
 }
