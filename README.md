@@ -32,6 +32,7 @@ donde los siguientes parametros son obligatorios
   "debugLevel": 3,
   "debugFileSize": 4000,
   "token" : "TY8x6y7u4vNpqWoN",
+
   ...
  }
 ```
