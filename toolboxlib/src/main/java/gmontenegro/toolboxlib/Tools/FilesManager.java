@@ -66,7 +66,32 @@ public class FilesManager extends BaseManager{
 
     }
 
+    public static  void saveTextRoundFile(String filename , String text )
+    {
+        try
+        {
+            String file = loadText(filename);
+            int maxSize = SettingsManager.getDefaultState().debugFileSize;
+            int textSize = text.length();
+            //Si el archivo con el nuevo texto supera el tamaño maximo
+            //borra una porsion del principio equivalente al nuevo texto
+            if(file.length()+ textSize> maxSize)
+            {
+               file = file.substring(textSize);
+            }
+            //Agrega el nuevo texto
+            file = file + text;
+            FileOutputStream fileOutputStream = context.openFileOutput(filename
+                    , Context.MODE_PRIVATE);
+            fileOutputStream.write(file.getBytes());
+            fileOutputStream.close();
 
+
+        } catch (IOException e) {
+            LogManager.error(e,"Filemanager");
+        }
+
+    }
 
     public static String loadText(String filename)
     {
@@ -89,14 +114,14 @@ public class FilesManager extends BaseManager{
             return ret;
         }
         catch(Exception e) {
-            LogManager.error(e, "Filemanager");
-            return null;
+            //LogManager.error(e, "Filemanager");
+            return ret;
         }
     }
 
     public static  void saveTextEncrypted(String filename , String text , boolean append)
     {
-            saveText(filename, EncryptionManager.encrypt("PASSWORD",text), append);
+            saveText(filename, EncryptionManager.encrypt(text), append);
     }
 
 
@@ -104,7 +129,7 @@ public class FilesManager extends BaseManager{
     public static String loadTextDecrypted(String filename)
     {
 
-        return  EncryptionManager.decrypt("PASSWORD",loadText(filename)) ;
+        return  EncryptionManager.decrypt(loadText(filename)) ;
     }
 
 

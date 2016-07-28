@@ -11,8 +11,7 @@ repositories {
     }
     maven {
     url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/'
-    }
-  }
+    } }
 
 ...
 
@@ -61,4 +60,34 @@ EncryptionManager.decrypt(TextoCifrado,true);
 
 Si un dato se encripta con un token, debe ser desencriptado con la mismo token, para recuperar su valor.
 Como el token de sesión se pierde al cerrar la app, los datos guardados durante la sesión no se van a poder desencriptar
+
+LogManager
+----------
+Los parametros basicos de Log se definen el asset stateAsset.
+
+```Json
+{
+  "debug": "true",
+  "saveLog": "true",
+  "debugLevel": 3,
+  "debugFileSize": 4000,
+  ...
+```
+**Debug**
+true: encendido
+false: apagado
+
+**DebugLevel:**
+0: Sin log
+1: Solo Errores
+2: Errores y Warnings
+3: Verbose
+
+**SaveLog**
+true: Guarda un archivo con el log
+false: No guarda el archivo
+
+**DebugFileSize**
+Es el tamaño en Bytes del archivo de log.
+
 

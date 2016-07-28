@@ -16,6 +16,10 @@ public class LogManager extends BaseManager{
     private static final int LEVEL_ERRORS = 1;
     private static final int LEVEL_OFF = 0;
 
+    private static final String DEBUG = "DD";
+    private static final String WARNING = "WW";
+    private static final String ERROR = "EE";
+
     private static final String TEXT_LINE_DELIMITER = " - ";
 
     final static String TAG = "APPLICATIONTAG";
@@ -28,7 +32,7 @@ public class LogManager extends BaseManager{
     public static final void debug(Object... data) {
         if(SettingsManager.getDefaultState().debugLevel == LEVEL_VERBOSE) {
             StringBuilder reportData = new StringBuilder();
-            reportData.append("Method: ").append(getMethodName()).append(TEXT_LINE_DELIMITER);
+            reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
 
             for (int i = 0; i < data.length; i++) {
                 reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
@@ -37,7 +41,7 @@ public class LogManager extends BaseManager{
             if (SettingsManager.getDefaultState().debug)
                 Log.d(TAG, reportData.toString());
             if (SettingsManager.getDefaultState().saveLog)
-                FilesManager.saveText(FILELOG, getTime() + " " + reportData.toString() + "\n", true);
+                writeFormatedLog(reportData.toString(),DEBUG);
         }
 
     }
@@ -49,7 +53,7 @@ public class LogManager extends BaseManager{
     public static final void warn(Object... data) {
         if(SettingsManager.getDefaultState().debugLevel >= LEVEL_PROBLEMS) {
             StringBuilder reportData = new StringBuilder();
-            reportData.append("Method: ").append(getMethodName()).append(TEXT_LINE_DELIMITER);
+            reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
 
             for (int i = 0; i < data.length; i++) {
                 reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
@@ -57,7 +61,7 @@ public class LogManager extends BaseManager{
             if (SettingsManager.getDefaultState().debug)
                 Log.w(TAG, reportData.toString());
             if (SettingsManager.getDefaultState().saveLog)
-                FilesManager.saveText(FILELOG, getTime() + " " + reportData.toString() + "\n", true);
+                writeFormatedLog(reportData.toString(),WARNING);
         }
     }
 
@@ -69,15 +73,13 @@ public class LogManager extends BaseManager{
 
         if(SettingsManager.getDefaultState().debugLevel >= LEVEL_ERRORS) {
             StringBuilder reportData = new StringBuilder();
-            reportData.append("Method: ").append(getMethodName()).append(TEXT_LINE_DELIMITER);
+            reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
             if (SettingsManager.getDefaultState().debug)
                 Log.e(TAG, reportData.toString(), e);
             if (SettingsManager.getDefaultState().saveLog)
-                FilesManager.saveText(FILELOG, getTime() + " "
-                        + reportData.toString() + " "
+                writeFormatedLog(reportData.toString() + " "
                         + e.getMessage() + " "
-                        + e.getCause() + " "
-                        + "\n", true);
+                        + e.getCause(),ERROR);
         }
     }
 
@@ -85,17 +87,28 @@ public class LogManager extends BaseManager{
 
         if(SettingsManager.getDefaultState().debugLevel >= LEVEL_ERRORS) {
             StringBuilder reportData = new StringBuilder();
-            reportData.append("Method: ").append(getMethodName()).append(TEXT_LINE_DELIMITER);
+            reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
             if (SettingsManager.getDefaultState().debug)
                 Log.e(TAG, reportData.toString(), e);
             if (SettingsManager.getDefaultState().saveLog)
-                FilesManager.saveText(FILELOG, getTime() + " "
-                        + reportData.toString() + " "
+                writeFormatedLog(reportData.toString() + " "
                         + e.getMessage() + " "
-                        + e.getCause() + " "
-                        + "\n", true);
+                        + e.getCause(),ERROR);
         }
     }
+
+
+
+
+    private static void writeFormatedLog(String text ,String type)
+    {
+        FilesManager.saveTextRoundFile(FILELOG,type
+                + getTime()
+                + text
+                + " \n");
+    }
+
+
 
     /**
      * Get the method name for a depth in call stack
@@ -121,7 +134,10 @@ public class LogManager extends BaseManager{
             if (stackTraceElement[depth].getClassName().equals(LogManager.class.getName())) {
                 depth++;
             } else {
-                return stackTraceElement[depth].getClassName() + "." + stackTraceElement[depth].getMethodName();
+
+                return " " + stackTraceElement[depth].getFileName() + ":"
+                        + stackTraceElement[depth].getLineNumber() + " M:"
+                        + stackTraceElement[depth].getMethodName();
             }
         }
 
@@ -132,7 +148,7 @@ public class LogManager extends BaseManager{
     static private String getTime() {
         Time now = new Time();
         now.setToNow();
-        return now.format2445();
+        return " ["+now.format3339(false)+"] ";
     }
 
     public static String getLog() {

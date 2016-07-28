@@ -8,5 +8,6 @@ public class DefaultSettings {
     public boolean debug = false;
     public boolean saveLog = false;
     public int debugLevel= 0;
+    public int debugFileSize = 0;
     public String token = "";
 }
