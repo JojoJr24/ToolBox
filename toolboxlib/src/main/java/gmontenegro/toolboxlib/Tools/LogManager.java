@@ -2,6 +2,7 @@ package gmontenegro.toolboxlib.Tools;
 
 import android.text.format.Time;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.security.ProviderException;
 
@@ -11,6 +12,7 @@ import java.security.ProviderException;
  */
 public class LogManager extends BaseManager{
 
+    private static final int LEVEL_VERBOSE_TOAST = 4;
     private static final int LEVEL_VERBOSE = 3;
     private static final int LEVEL_PROBLEMS = 2;
     private static final int LEVEL_ERRORS = 1;
@@ -22,15 +24,15 @@ public class LogManager extends BaseManager{
 
     private static final String TEXT_LINE_DELIMITER = " - ";
 
-    final static String TAG = "APPLICATIONTAG";
-    final static String FILELOG = "app.log";
 
+    private final static String FILELOG = "app.log";
 
+    protected static OnLogChangedCallback callback;
     /**
      * Muestra el dato pero no lo guarda , solo para debug
      */
     public static final void debug(Object... data) {
-        if(SettingsManager.getDefaultState().debugLevel == LEVEL_VERBOSE) {
+        if(SettingsManager.getDefaultState().debugLevel >= LEVEL_VERBOSE) {
             StringBuilder reportData = new StringBuilder();
             reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
 
@@ -39,7 +41,7 @@ public class LogManager extends BaseManager{
             }
 
             if (SettingsManager.getDefaultState().debug)
-                Log.d(TAG, reportData.toString());
+                Log.d(SettingsManager.getDefaultState().debugTAG, reportData.toString());
             if (SettingsManager.getDefaultState().saveLog)
                 writeFormatedLog(reportData.toString(),DEBUG);
         }
@@ -59,7 +61,7 @@ public class LogManager extends BaseManager{
                 reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
             }
             if (SettingsManager.getDefaultState().debug)
-                Log.w(TAG, reportData.toString());
+                Log.w(SettingsManager.getDefaultState().debugTAG, reportData.toString());
             if (SettingsManager.getDefaultState().saveLog)
                 writeFormatedLog(reportData.toString(),WARNING);
         }
@@ -75,7 +77,7 @@ public class LogManager extends BaseManager{
             StringBuilder reportData = new StringBuilder();
             reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
             if (SettingsManager.getDefaultState().debug)
-                Log.e(TAG, reportData.toString(), e);
+                Log.e(SettingsManager.getDefaultState().debugTAG, reportData.toString(), e);
             if (SettingsManager.getDefaultState().saveLog)
                 writeFormatedLog(reportData.toString() + " "
                         + e.getMessage() + " "
@@ -89,7 +91,7 @@ public class LogManager extends BaseManager{
             StringBuilder reportData = new StringBuilder();
             reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
             if (SettingsManager.getDefaultState().debug)
-                Log.e(TAG, reportData.toString(), e);
+                Log.e(SettingsManager.getDefaultState().debugTAG, reportData.toString(), e);
             if (SettingsManager.getDefaultState().saveLog)
                 writeFormatedLog(reportData.toString() + " "
                         + e.getMessage() + " "
@@ -97,6 +99,20 @@ public class LogManager extends BaseManager{
         }
     }
 
+    public static final void error(Object... data) {
+        if(SettingsManager.getDefaultState().debugLevel >= LEVEL_ERRORS) {
+            StringBuilder reportData = new StringBuilder();
+            reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
+
+            for (int i = 0; i < data.length; i++) {
+                reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
+            }
+            if (SettingsManager.getDefaultState().debug)
+                Log.e(SettingsManager.getDefaultState().debugTAG, reportData.toString());
+            if (SettingsManager.getDefaultState().saveLog)
+                writeFormatedLog(reportData.toString(),ERROR);
+        }
+    }
 
 
 
@@ -106,6 +122,13 @@ public class LogManager extends BaseManager{
                 + getTime()
                 + text
                 + " \n");
+        if(SettingsManager.getDefaultState().debugLevel >= LEVEL_VERBOSE_TOAST) {
+            Toast.makeText(context,text,Toast.LENGTH_SHORT).show();
+        }
+        if(callback!= null)
+        {
+            callback.onLogChanged();
+        }
     }
 
 
@@ -158,6 +181,11 @@ public class LogManager extends BaseManager{
     public static void deleteLog()
     {
         FilesManager.deleteFile(FILELOG);
+    }
+
+    public static void setCallback(OnLogChangedCallback callBack)
+    {
+        callback = callBack;
     }
 
 }

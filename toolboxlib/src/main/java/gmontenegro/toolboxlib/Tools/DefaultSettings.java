@@ -5,9 +5,11 @@ package gmontenegro.toolboxlib.Tools;
  */
 public class DefaultSettings {
 
+    public String debugTAG;
     public boolean debug = false;
     public boolean saveLog = false;
     public int debugLevel= 0;
     public int debugFileSize = 0;
+    public String defaultNamesapce = "";
     public String token = "";
 }

@@ -1,6 +1,7 @@
 package gmontenegro.toolboxlib.Tools;
 
 import android.os.AsyncTask;
+import android.widget.TextView;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -17,26 +18,37 @@ import java.util.Map;
 /**
  * Created by gmontenegro on 27/07/2016.
  */
- public class SoapWSManager extends WSManager {
+ public abstract class SoapWSManager extends WSManager {
 
     private String urlAmbiente;
-    LinkedHashMap paramsValues;
+    private String namespace;
+    private LinkedHashMap paramsValues;
+    private TextView tv ;
 
     protected SoapWSManager(OnWebServiceResponseCallback callback,String urlAmbiente , String methodName,
+                            LinkedHashMap paramsValues )
+    {
+        this(callback,urlAmbiente,SettingsManager.getDefaultState().defaultNamesapce,methodName,paramsValues);
+    }
+
+    protected SoapWSManager(OnWebServiceResponseCallback callback,String urlAmbiente ,String namespace, String methodName,
                             LinkedHashMap paramsValues )
     {
         super(callback);
         this.urlAmbiente = urlAmbiente;
         this.methodName = methodName;
         this.paramsValues = paramsValues;
+        this.namespace = namespace;
+        execute(true);
     }
+
 
     @Override
     protected void execute(boolean async) {
         AsyncTask task = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] params) {
-                String serviceUrl =  urlAmbiente+ methodName;
+                String serviceUrl =  urlAmbiente;
 
                 HttpTransportSE transport = new HttpTransportSE(java.net.Proxy.NO_PROXY,
                         serviceUrl, 15000);
@@ -44,7 +56,7 @@ import java.util.Map;
 
 
                 SoapObject soapObj =  new SoapObject(
-                        "http://tempuri.org/", methodName);
+                        namespace, methodName);
 
 
                 if (paramsValues != null) {
@@ -56,13 +68,13 @@ import java.util.Map;
                 }
 
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                        SoapEnvelope.VER12);
+                        SoapEnvelope.VER11);
                 // set the dotNet attribute for .net web services, or call bill gates.
-                envelope.dotNet = true;
+                //envelope.dotNet = true;
                 envelope.setOutputSoapObject(soapObj);
                 try {
 
-                    transport.call("", envelope);
+                    transport.call(namespace +methodName, envelope);
                     Object retObj = null;
                     retObj = envelope.getResponse();
                     if(retObj == null)
@@ -71,12 +83,16 @@ import java.util.Map;
 
                 }catch (SoapFault soapFault) {
                     LogManager.error(soapFault,methodName);
+                    return soapFault.getMessage();
                 } catch (IOException e) {
                     LogManager.error(e,methodName);
+                    return e.getMessage();
                 } catch (XmlPullParserException e) {
                     LogManager.error(e,methodName);
+                    return e.getMessage();
                 } catch (Exception e) {
                     LogManager.error(e,methodName);
+                    return e.getMessage();
                 }
                 finally {
 
@@ -90,7 +106,7 @@ import java.util.Map;
                 ret.add("");
         }*/
 
-                return null;
+
             }
 
             @Override
@@ -101,7 +117,8 @@ import java.util.Map;
                 }
                 else
                 {
-                    mCallback.onWebServiceResponse(o);
+                    Object ret = parseObject(o);
+                    mCallback.onWebServiceResponse(ret);
                 }
             }
 
@@ -110,6 +127,30 @@ import java.util.Map;
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else
             task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+    }
+
+    /**
+     * Parser de la respuesta del WS
+     * @param object
+     * @return
+     */
+    protected abstract Object parseObject(Object object);
+
+
+    /**
+     * Crea un linkedHasmap para enviar al contructor con los parametros
+     * @param data lista de parametros del WS en pares(nombre1, valor1,nombre2,valor2,...)
+     * @return
+     */
+    public static LinkedHashMap<String,Object> createParameter(Object... data)
+    {
+        LinkedHashMap<String,Object> ret = new LinkedHashMap<>();
+        for(int i = 0 ; i < data.length-1 ; i+=2)
+        {
+            ret.put((String) data[i],data[i+1]);
+        }
+
+        return ret;
     }
 
 

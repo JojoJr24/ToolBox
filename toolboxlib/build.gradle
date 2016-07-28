@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/Jojojr24/ToolBox'
     gitUrl = 'https://github.com/Jojojr24/Toolbox.git'
 
-    libraryVersion = '0.0.2'
+    libraryVersion = '0.0.3'
 
     developerId = 'Jojojr24'
     developerName = 'Montenegro Guillermo'
@@ -33,7 +33,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
-        versionName "0.0.2"
+        versionName "0.0.3"
     }
     buildTypes {
         release {

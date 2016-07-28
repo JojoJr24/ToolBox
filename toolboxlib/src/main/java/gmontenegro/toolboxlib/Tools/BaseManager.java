@@ -19,11 +19,17 @@ public class BaseManager {
         //pruebo iniciar ambas
         activity = pActivity;
         context = pActivity;
+        //Lo borro para disminuir los riesgos de que quede cargado y sea llamado cuando ya no existe
+        //el activity
+        LogManager.callback = null;
     }
 
     public static void initManagers(Context pContext)
     {
         context = pContext;
+        //Lo borro para disminuir los riesgos de que quede cargado y sea llamado cuando ya no existe
+        //el activity
+        LogManager.callback = null;
     }
 
 
