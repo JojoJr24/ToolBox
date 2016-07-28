@@ -96,7 +96,7 @@ public class FilesManager extends BaseManager{
 
     public static  void saveTextEncrypted(String filename , String text , boolean append)
     {
-            saveText(filename, EncriptionManager.encrypt("PASSWORD",text), append);
+            saveText(filename, EncryptionManager.encrypt("PASSWORD",text), append);
     }
 
 
@@ -104,7 +104,7 @@ public class FilesManager extends BaseManager{
     public static String loadTextDecrypted(String filename)
     {
 
-        return  EncriptionManager.decrypt("PASSWORD",loadText(filename)) ;
+        return  EncryptionManager.decrypt("PASSWORD",loadText(filename)) ;
     }
 
 

@@ -12,8 +12,11 @@ public class BaseManager {
     protected static Context context;
 
 
+
     public static void initManagers(Activity pActivity)
     {
+        //Como hay cosas que necesitan activity y otras context,
+        //pruebo iniciar ambas
         activity = pActivity;
         context = pActivity;
     }
@@ -22,5 +25,8 @@ public class BaseManager {
     {
         context = pContext;
     }
+
+
+
 
 }

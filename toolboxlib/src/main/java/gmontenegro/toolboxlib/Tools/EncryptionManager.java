@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -14,7 +15,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * Created by gmontenegro on 26/07/2016.
  */
-public class EncriptionManager extends BaseManager{
+public class EncryptionManager extends BaseManager{
 
 
     //AESCrypt-ObjC uses CBC and PKCS7Padding
@@ -28,8 +29,7 @@ public class EncriptionManager extends BaseManager{
     private static final byte[] ivBytes = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 
-    private EncriptionManager() {
-    }
+
 
     /**
      * Generates SHA256 hash of the password which is used as key
@@ -52,15 +52,26 @@ public class EncriptionManager extends BaseManager{
     /**
      * Encrypt and encode message using 256-bit AES with key generated from password.
      *
-     * @param password used to generated key
      * @param message  the thing you want to encrypt assumed String UTF-8
      * @return Base64 encoded CipherText
      * @throws GeneralSecurityException if problems occur during encryption
      */
-    public static String encrypt(final String password, String message) {
+    public static String encrypt(String message) {
+        return encrypt(message,false);
+    }
+
+    /**
+     * Encrypt and encode message using 256-bit AES with key generated from password.
+     *
+     * @param message  the thing you want to encrypt assumed String UTF-8
+     * @param isForSession if true, use the session token
+     * @return Base64 encoded CipherText
+     * @throws GeneralSecurityException if problems occur during encryption
+     */
+    public static String encrypt(String message , boolean isForSession) {
 
         try {
-            final SecretKeySpec key = generateKey(password);
+            final SecretKeySpec key = generateKey(getToken(isForSession));
 
             log("message", message);
 
@@ -106,15 +117,26 @@ public class EncriptionManager extends BaseManager{
     /**
      * Decrypt and decode ciphertext using 256-bit AES with key generated from password
      *
-     * @param password                used to generated key
      * @param base64EncodedCipherText the encrpyted message encoded with base64
      * @return message in Plain text (String UTF-8)
      * @throws GeneralSecurityException if there's an issue decrypting
      */
-    public static String decrypt(final String password, String base64EncodedCipherText) {
+    public static String decrypt(String base64EncodedCipherText) {
+       return decrypt(base64EncodedCipherText,false);
+    }
+
+    /**
+     * Decrypt and decode ciphertext using 256-bit AES with key generated from password
+     *
+     * @param base64EncodedCipherText the encrpyted message encoded with base64
+     * @param isForSession if true, use the session token
+     * @return message in Plain text (String UTF-8)
+     * @throws GeneralSecurityException if there's an issue decrypting
+     */
+    public static String decrypt(String base64EncodedCipherText, boolean isForSession) {
 
         try {
-            final SecretKeySpec key = generateKey(password);
+            final SecretKeySpec key = generateKey(getToken(isForSession));
 
             log("base64EncodedCipherText", base64EncodedCipherText);
             byte[] decodedCipherText = Base64.decode(base64EncodedCipherText, Base64.NO_WRAP);
@@ -187,5 +209,59 @@ public class EncriptionManager extends BaseManager{
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+
+    protected static String generateRandomToken()
+    {
+
+        final String alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        final int N = alphabet.length();
+        Random r = new Random();
+        final int lenght = r.nextInt(8)+8;
+        String ret = "";
+
+
+
+        for(int j = 0 ; j < lenght ; j++ ) {
+            for (int i = 0; i < 50; i++) {
+                ret = ret + alphabet.charAt(r.nextInt(N));
+            }
+        }
+
+        return ret;
+    }
+
+    public static void initSessionToken()
+    {
+        setToken("");
+    }
+
+    private static String getToken(boolean isSessionToken)
+    {
+        if(isSessionToken)
+        {
+            String ret = StoreManager.pullString("tok");
+            if(ret.equals(""))
+            {
+                String tok = EncryptionManager.generateRandomToken();
+                setToken(tok);
+                return tok;
+            }
+            else
+            {
+                return ret;
+            }
+        }
+        else
+        {
+            return SettingsManager.getDefaultState().token;
+        }
+
+    }
+
+    private static void setToken(String token)
+    {
+        StoreManager.putString("tok",token);
     }
 }
