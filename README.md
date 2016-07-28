@@ -16,7 +16,7 @@ repositories {
 ...
 
 dependencies {
-    compile 'gmontenegro:toolboxlib:0.0.1'
+    compile 'gmontenegro:toolboxlib:0.0.3'
 }
 ```
 
@@ -27,10 +27,12 @@ En la carpeta de Assets de la applicación hay que agregar un archivo statAsset 
 donde los siguientes parametros son obligatorios
 ```Json
 {
-	"debug": "true",
-	"saveLog": "true",
-	"debugLevel": 3,
-	"token" : "Token"
+  "debug": "true",
+  "saveLog": "true",
+  "debugLevel": 3,
+  "debugFileSize": 4000,
+  "token" : "TY8x6y7u4vNpqWoN",
+  ...
  }
 ```
 
