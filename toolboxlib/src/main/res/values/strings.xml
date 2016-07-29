@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ToolBoxLib</string>
+    <string name="stateAssetError">El archivo stateAsset no tiene el formato JSON correcto. Se cargaran las opciones por default.</string>
 </resources>

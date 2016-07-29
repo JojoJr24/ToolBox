@@ -1,7 +1,6 @@
 package gmontenegro.toolboxlib.Tools;
 
 import android.os.AsyncTask;
-import android.widget.TextView;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -20,15 +19,15 @@ import java.util.Map;
  */
  public abstract class SoapWSManager extends WSManager {
 
-    private String urlAmbiente;
-    private String namespace;
-    private LinkedHashMap paramsValues;
-    private TextView tv ;
+    private final String urlAmbiente;
+    private final String methodName;
+    private final String namespace;
+    private final LinkedHashMap paramsValues;
 
     protected SoapWSManager(OnWebServiceResponseCallback callback,String urlAmbiente , String methodName,
                             LinkedHashMap paramsValues )
     {
-        this(callback,urlAmbiente,SettingsManager.getDefaultState().defaultNamesapce,methodName,paramsValues);
+        this(callback,urlAmbiente,SettingsManager.getDefaultState().defaultNamespace,methodName,paramsValues);
     }
 
     protected SoapWSManager(OnWebServiceResponseCallback callback,String urlAmbiente ,String namespace, String methodName,
@@ -39,20 +38,22 @@ import java.util.Map;
         this.methodName = methodName;
         this.paramsValues = paramsValues;
         this.namespace = namespace;
-        execute(true);
+
     }
 
 
     @Override
-    protected void execute(boolean async) {
-        AsyncTask task = new AsyncTask() {
+    public void execute(boolean async) {
+        AsyncTask<Object,Integer,Object> task = new AsyncTask<Object,Integer,Object>() {
             @Override
             protected Object doInBackground(Object[] params) {
                 String serviceUrl =  urlAmbiente;
 
                 HttpTransportSE transport = new HttpTransportSE(java.net.Proxy.NO_PROXY,
                         serviceUrl, 15000);
-                transport.debug = true;
+
+                if(SettingsManager.getDefaultState().debug)
+                    transport.debug = true;
 
 
                 SoapObject soapObj =  new SoapObject(
@@ -82,20 +83,34 @@ import java.util.Map;
                     return retObj;
 
                 }catch (SoapFault soapFault) {
-                    LogManager.error(soapFault,methodName);
+                    LogManager.error(soapFault
+                            ,"Request : " + transport.requestDump + "\n"
+                            ,"Response : " + transport.responseDump + "\n"
+                            ,methodName);
                     return soapFault.getMessage();
                 } catch (IOException e) {
-                    LogManager.error(e,methodName);
+                    LogManager.error(e,
+                            "Request : " + transport.requestDump + "\n"
+                            ,"Response : " + transport.responseDump + "\n"
+                            ,methodName);
                     return e.getMessage();
                 } catch (XmlPullParserException e) {
-                    LogManager.error(e,methodName);
+                    LogManager.error(e,
+                            "Request : " + transport.requestDump + "\n"
+                            ,"Response : " + transport.responseDump + "\n"
+                            ,methodName);
                     return e.getMessage();
                 } catch (Exception e) {
-                    LogManager.error(e,methodName);
+                    LogManager.error(e,
+                            "Request : " + transport.requestDump + "\n"
+                            ,"Response : " + transport.responseDump + "\n"
+                            ,methodName);
                     return e.getMessage();
                 }
                 finally {
-
+                    LogManager.debug("Request : " + transport.requestDump + "\n"
+                            ,"Response : " + transport.responseDump + "\n"
+                            ,methodName);
                 }
 
         /*Vector<String> ret = new Vector<>();
@@ -144,7 +159,7 @@ import java.util.Map;
      */
     public static LinkedHashMap<String,Object> createParameter(Object... data)
     {
-        LinkedHashMap<String,Object> ret = new LinkedHashMap<>();
+        LinkedHashMap<String,Object> ret = new LinkedHashMap<String,Object>();
         for(int i = 0 ; i < data.length-1 ; i+=2)
         {
             ret.put((String) data[i],data[i+1]);

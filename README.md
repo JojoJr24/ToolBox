@@ -2,7 +2,7 @@ ToolBox
 =======
 
 ### Version
-0.0.4
+0.0.5
 
 Para instalar hay que agregar estas lineas al gradle de la app
 ```Gradle
@@ -31,8 +31,11 @@ donde los siguientes parametros son obligatorios
   "debugTAG": "APPLICATIONTAG",
   "debug": "true",
   "saveLog": "true",
-  "debugLevel": 4,
-  "debugFileSize": 64000,
+  "debugToasts": "true",
+  "debugMail": "true",
+  "debugMailAddress": "debug@mail.com",
+  "debugLevel": 1,
+  "debugFileSize": 400,
   "token": "TY8x6y7u4vNpqWoN",
   "defaultNamesapce": "http://www.example.org/sample/",
   ...
@@ -79,33 +82,54 @@ Log.d(Tag,Text);
 Los parametros basicos de Log se definen el asset stateAsset.
 
 ```Json
-{
+  "debugTAG": "APPLICATIONTAG",
   "debug": "true",
   "saveLog": "true",
+  "debugToasts": "true",
+  "debugMail": "true",
+  "debugMailAddress": "debug@mail.com",
   "debugLevel": 3,
-  "debugFileSize": 4000,
+  "debugFileSize": 8000,
+  "debugFileName": "appLog.txt",
   ...
 ```
-**Debug**
+**DebugTAG**
+Tag for debugger
 
+**Debug**
  - true: encendido
  - false: apagado
+ 
+**SaveLog**
+ - true: Guarda un archivo con el log
+ - false: No guarda el archivo
+
+**DebugToast**
+ - True: Muestra en un toast el log (dependiendo del nivel) y en la carga de cada Activity muestra su clase
+
+**DebugMail**
+ - True: Despues de un crash grave , al reinicio permite enviar un mail
+   con el Stack del crash
+
+**DebugMailAddress**
+Es la dirección por default donde se enviara el mail si *DebugMail* es true y ocurre un crash
+
+**DebugFileSize**
+Es el tamaño en Bytes del archivo de log.
 
 **DebugLevel:**
-
  - 0: Sin log
  - 1: Solo Errores
  - 2: Errores y Warnings
  - 3: Verbose
- - 4:  Verbose + Toasts
 
-**SaveLog**
+DebugFileName
+-------------
 
- - true: Guarda un archivo con el log
- - false: No guarda el archivo
-
-**DebugFileSize**
-Es el tamaño en Bytes del archivo de log.
+Al invocar el siguiente método , el archivo de Log se guardara en la carpeta logs del dispositivo.
+```Java
+LogManager.exportLogFile(); 
+```
 
 En el caso de querer mostrar en pantalla el log en tiempo real se puede usar el callback *OnLogChangedCallback* que avisa en cada cambio de log, pero con el cuidado de borrarlo antes de salir del activity.
 
@@ -149,3 +173,4 @@ La forma de invocarlo es escribiendo el nombre del campo seguido del objeto que 
 SoapWSManager.createParameter("name1",object1,"name2",object2,...));
 
 ```
+

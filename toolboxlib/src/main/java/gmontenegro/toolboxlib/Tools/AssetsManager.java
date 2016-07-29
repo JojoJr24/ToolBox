@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 
+import gmontenegro.toolboxlib.R;
+
 /**
  * Created by gmontenegro on 26/07/2016.
  */
@@ -38,9 +40,15 @@ public class AssetsManager extends BaseManager {
 
     public static Object loadObjectFromAsset(String filename, Type clase)
     {
-        String json = loadJSONFromAsset(filename);
-        Gson gson = new Gson();
-        Object ret = gson.fromJson(json,clase);
-        return ret;
+        try {
+            String json = loadJSONFromAsset(filename);
+            Gson gson = new Gson();
+            return gson.fromJson(json, clase);
+        }
+        catch (Exception e)
+        {
+            LogManager.error(context.getString(R.string.stateAssetError),e.getMessage());
+        }
+        return null;
     }
 }

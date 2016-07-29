@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +24,7 @@ public class PermissionManager  extends BaseManager{
     final static String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     final static String READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
 
-    public static boolean RequestPermission(final String permission , String text)
+    public static boolean RequestPermission(@NonNull final String permission , String text)
     {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
@@ -34,7 +36,7 @@ public class PermissionManager  extends BaseManager{
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
             alertBuilder.setCancelable(true);
             alertBuilder.setTitle("Permission necessary");
-            alertBuilder.setMessage("External storage permission is necessary");
+            alertBuilder.setMessage(text);
             alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -49,7 +51,7 @@ public class PermissionManager  extends BaseManager{
         return false;
     }
 
-    public static boolean RequestMultiplePermission(final List<String> permissions, CharSequence text)
+    public static boolean RequestMultiplePermission(@NonNull final List<String> permissions, CharSequence text)
     {
 
         final ArrayList<String> permissionsNeeded = new ArrayList<String>();
@@ -78,7 +80,7 @@ public class PermissionManager  extends BaseManager{
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
             alertBuilder.setCancelable(true);
             alertBuilder.setTitle("Permission necessary");
-            alertBuilder.setMessage("External storage permission is necessary");
+            alertBuilder.setMessage(text);
             alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -93,19 +95,19 @@ public class PermissionManager  extends BaseManager{
         return false;
     }
 
-    public static boolean RequestCamera( int StringRes) {
+    public static boolean RequestCamera(@StringRes int StringRes) {
         return RequestPermission(CAMERA, context.getResources().getString(StringRes));
     }
 
-    public static boolean RequestContacts( int StringRes) {
+    public static boolean RequestContacts(@StringRes int StringRes) {
         return RequestPermission(CONTACTS , context.getResources().getString(StringRes));
     }
 
-    public static boolean RequestLocation( int StringRes) {
+    public static boolean RequestLocation(@StringRes int StringRes) {
         return RequestPermission(LOCATION, context.getResources().getString(StringRes));
     }
 
-    public static boolean RequestReadWrite( int StringRes) {
+    public static boolean RequestReadWrite(@StringRes int StringRes) {
         return RequestMultiplePermission(Arrays.asList(WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE)
                 , context.getResources().getString(StringRes));
     }

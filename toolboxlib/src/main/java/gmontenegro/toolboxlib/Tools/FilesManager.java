@@ -2,11 +2,15 @@ package gmontenegro.toolboxlib.Tools;
 
 import android.content.Context;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 
 /**
@@ -39,7 +43,7 @@ public class FilesManager extends BaseManager{
             FileInputStream fileInputStream  = context.openFileInput(filename);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-            ret = new HashMap<String,Object>((HashMap)objectInputStream.readObject());
+            ret = new HashMap<String,Object>((HashMap<String,Object>)objectInputStream.readObject());
             objectInputStream.close();
             return ret;
         }
@@ -77,7 +81,7 @@ public class FilesManager extends BaseManager{
             //borra una porsion del principio equivalente al nuevo texto
             if(file.length()+ textSize> maxSize)
             {
-               file = file.substring(textSize);
+               file = file.substring(Math.min(textSize,file.length()));
             }
             //Agrega el nuevo texto
             file = file + text;
@@ -136,6 +140,140 @@ public class FilesManager extends BaseManager{
     public static void deleteFile(String filename)
     {
         context.deleteFile(filename);
+    }
+
+    public static void copyToExternalFile(String inputFile, String outputPath) {
+
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+
+            //create output directory if it doesn't exist
+            File dir = new File (outputPath);
+            if (!dir.exists())
+            {
+                dir.mkdirs();
+            }
+
+
+            in = context.openFileInput(inputFile);
+            out = new FileOutputStream(outputPath +"/"+ inputFile);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            in.close();
+            in = null;
+
+            // write the output file (You have now copied the file)
+            out.flush();
+            out.close();
+            out = null;
+
+        }  catch (FileNotFoundException fnfe1) {
+            LogManager.error(fnfe1.getMessage());
+        }
+        catch (Exception e) {
+            LogManager.error( e.getMessage());
+        }
+
+    }
+
+    public static void copyExternalFile(String inputPath, String inputFile, String outputPath) {
+
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+
+            //create output directory if it doesn't exist
+            File dir = new File (outputPath);
+            if (!dir.exists())
+            {
+                dir.mkdirs();
+            }
+
+
+            in = new FileInputStream(inputPath + inputFile);
+            out = new FileOutputStream(outputPath + inputFile);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            in.close();
+            in = null;
+
+            // write the output file (You have now copied the file)
+            out.flush();
+            out.close();
+            out = null;
+
+        }  catch (FileNotFoundException fnfe1) {
+           LogManager.error(fnfe1.getMessage());
+        }
+        catch (Exception e) {
+            LogManager.error( e.getMessage());
+        }
+
+    }
+
+
+    public static void deleteExternalFile(String inputPath, String inputFile) {
+        try {
+            // delete the original file
+            new File(inputPath + inputFile).delete();
+        }
+        catch (Exception e) {
+            LogManager.error( e.getMessage());
+        }
+    }
+
+    public static void moveFile(String inputPath, String inputFile, String outputPath) {
+
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+
+            //create output directory if it doesn't exist
+            File dir = new File (outputPath);
+            if (!dir.exists())
+            {
+                dir.mkdirs();
+            }
+
+
+            in = new FileInputStream(inputPath + inputFile);
+            out = new FileOutputStream(outputPath + inputFile);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            in.close();
+            in = null;
+
+            // write the output file
+            out.flush();
+            out.close();
+            out = null;
+
+            // delete the original file
+            new File(inputPath + inputFile).delete();
+
+
+        }
+
+        catch (FileNotFoundException fnfe1) {
+            LogManager.error(fnfe1.getMessage());
+        }
+        catch (Exception e) {
+            LogManager.error( e.getMessage());
+        }
+
     }
 
 }

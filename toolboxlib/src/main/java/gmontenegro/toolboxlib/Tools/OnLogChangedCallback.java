@@ -5,6 +5,6 @@ package gmontenegro.toolboxlib.Tools;
  */
 public interface OnLogChangedCallback {
 
-    public void onLogChanged();
+     void onLogChanged();
 
 }

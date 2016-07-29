@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/Jojojr24/ToolBox'
     gitUrl = 'https://github.com/Jojojr24/Toolbox.git'
 
-    libraryVersion = '0.0.3'
+    libraryVersion = '0.0.4'
 
     developerId = 'Jojojr24'
     developerName = 'Montenegro Guillermo'
@@ -33,7 +33,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
-        versionName "0.0.3"
+        versionName "0.0.4"
     }
     buildTypes {
         release {
@@ -53,7 +53,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.0'
 
     //////////////GSON
-    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.google.code.gson:gson:2.4'
     //////////////
     //////////////KSOAP
     compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
@@ -62,5 +62,5 @@ dependencies {
     compile 'com.inthecheesefactory.thecheeselibrary:fb-like:0.9.3'
     ///////////////////////////////
 }
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+apply from: 'installv1.gradle'
+apply from: 'bintrayv1.gradle'

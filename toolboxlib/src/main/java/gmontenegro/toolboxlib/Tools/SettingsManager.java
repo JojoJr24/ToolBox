@@ -10,9 +10,9 @@ public class SettingsManager extends BaseManager{
 
     public static Object getState()//Una vez ejecutado con un context, guarda el dato
     {
-        if(state == null && context != null)
+        if(context != null)
         {
-            state = (DefaultSettings) AssetsManager.loadObjectFromAsset("stateAsset", clase);
+            state =  AssetsManager.loadObjectFromAsset("stateAsset", clase);
 
         }
         return state;

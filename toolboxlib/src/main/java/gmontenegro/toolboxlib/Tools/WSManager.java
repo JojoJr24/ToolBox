@@ -5,9 +5,9 @@ package gmontenegro.toolboxlib.Tools;
  */
 public class WSManager extends BaseManager implements OnWebServiceResponseCallback {
 
-    protected OnWebServiceResponseCallback mCallback;
+    protected final OnWebServiceResponseCallback mCallback;
 
-    protected String methodName= "";
+
 
 
     protected WSManager(OnWebServiceResponseCallback callback )
