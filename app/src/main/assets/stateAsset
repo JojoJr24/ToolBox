@@ -1,6 +1,14 @@
 {
+  "debugTAG": "APPLICATIONTAG",
   "debug": "true",
   "saveLog": "true",
+  "debugToasts": "true",
+  "debugMail": "true",
+  "debugMailAddress": "debug@mail.com",
   "debugLevel": 3,
+  "debugFileSize": 8000,
+  "debugFileName": "appLog.txt",
+  "token": "TY8x6y7u4vNpqWoN",
+  "defaultNamespace": "http://www.example.org/sample/",
   "otro" : 42
 }

@@ -20,7 +20,14 @@ android {
     repositories {
         maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
     }
+    packagingOptions {
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/DEPENDENCIES'
 
+    }
 }
 
 dependencies {
@@ -29,6 +36,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile project(path: ':toolboxlib')
     //////////////KSOAP
-    compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
+    provided 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
     /////////////////////////
 }
