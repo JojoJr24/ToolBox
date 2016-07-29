@@ -11,7 +11,7 @@ import java.security.ProviderException;
 /**
  * Created by gmontenegro on 26/07/2016.
  */
-public class LogManager extends BaseManager{
+public class LogManager extends BaseManager {
 
     protected static final int LEVEL_VERBOSE = 3;
     protected static final int LEVEL_PROBLEMS = 2;
@@ -23,23 +23,24 @@ public class LogManager extends BaseManager{
     private static final String ERROR = "EE";
     private static final String TEXT_LINE_DELIMITER = " - ";
 
-    protected static OnLogChangedCallback callback;
+    protected static OnLogChangedCallback mCallback;
+
     /**
      * Muestra el dato pero no lo guarda , solo para debug
      */
     public static void debug(Object... data) {
-        if(SettingsManager.getDefaultState().debugLevel >= LEVEL_VERBOSE) {
+        if (SettingsManager.getDefaultState().debugLevel >= LEVEL_VERBOSE) {
             StringBuilder reportData = new StringBuilder();
             reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
 
-            for (int i = 0; i < data.length; i++) {
-                reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
+            for (Object aData : data) {
+                reportData.append(aData).append(TEXT_LINE_DELIMITER);
             }
 
             if (SettingsManager.getDefaultState().debug)
                 Log.d(SettingsManager.getDefaultState().debugTAG, reportData.toString());
             if (SettingsManager.getDefaultState().saveLog)
-                writeFormatedLog(reportData.toString(),DEBUG);
+                writeFormatedLog(reportData.toString(), DEBUG);
         }
 
     }
@@ -48,18 +49,18 @@ public class LogManager extends BaseManager{
     /**
      * Muestra el warning y lo guarda solo si esta activado y el viene de un descendinete de context
      */
-    public static  void warn(Object... data) {
-        if(SettingsManager.getDefaultState().debugLevel >= LEVEL_PROBLEMS) {
+    public static void warn(Object... data) {
+        if (SettingsManager.getDefaultState().debugLevel >= LEVEL_PROBLEMS) {
             StringBuilder reportData = new StringBuilder();
             reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
 
-            for (int i = 0; i < data.length; i++) {
-                reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
+            for (Object aData : data) {
+                reportData.append(aData).append(TEXT_LINE_DELIMITER);
             }
             if (SettingsManager.getDefaultState().debug)
                 Log.w(SettingsManager.getDefaultState().debugTAG, reportData.toString());
             if (SettingsManager.getDefaultState().saveLog)
-                writeFormatedLog(reportData.toString(),WARNING);
+                writeFormatedLog(reportData.toString(), WARNING);
         }
     }
 
@@ -67,87 +68,78 @@ public class LogManager extends BaseManager{
     /**
      * Muestran el error y lo guardan, siempre tiene que tener context(para guardarlo)
      */
-    public static  void error( Throwable e, Object... data) {
+    public static void error(Throwable e, Object... data) {
 
-        if(SettingsManager.getDefaultState().debugLevel >= LEVEL_ERRORS) {
+        if (SettingsManager.getDefaultState().debugLevel >= LEVEL_ERRORS) {
             StringBuilder reportData = new StringBuilder();
             reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
-            for(int i = 0 ; i < data.length ; i++)
-            {
-                reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
+            for (Object aData : data) {
+                reportData.append(aData).append(TEXT_LINE_DELIMITER);
             }
             if (SettingsManager.getDefaultState().debug)
                 Log.e(SettingsManager.getDefaultState().debugTAG, reportData.toString(), e);
             if (SettingsManager.getDefaultState().saveLog)
                 writeFormatedLog(reportData.toString() + " "
                         + e.getMessage() + " "
-                        + e.getCause(),ERROR);
+                        + e.getCause(), ERROR);
         }
     }
 
-    public static  void error( ProviderException e, Object... data) {
+    public static void error(ProviderException e, Object... data) {
 
-        if(SettingsManager.getDefaultState().debugLevel >= LEVEL_ERRORS) {
+        if (SettingsManager.getDefaultState().debugLevel >= LEVEL_ERRORS) {
             StringBuilder reportData = new StringBuilder();
             reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
-            for(int i = 0 ; i < data.length ; i++)
-            {
-                reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
+            for (Object aData : data) {
+                reportData.append(aData).append(TEXT_LINE_DELIMITER);
             }
             if (SettingsManager.getDefaultState().debug)
                 Log.e(SettingsManager.getDefaultState().debugTAG, reportData.toString(), e);
             if (SettingsManager.getDefaultState().saveLog)
                 writeFormatedLog(reportData.toString() + " "
                         + e.getMessage() + " "
-                        + e.getCause(),ERROR);
+                        + e.getCause(), ERROR);
         }
     }
 
-    public static  void error(Object... data) {
-        if(SettingsManager.getDefaultState().debugLevel >= LEVEL_ERRORS) {
+    public static void error(Object... data) {
+        if (SettingsManager.getDefaultState().debugLevel >= LEVEL_ERRORS) {
             StringBuilder reportData = new StringBuilder();
             reportData.append(getMethodName()).append(TEXT_LINE_DELIMITER);
 
-            for (int i = 0; i < data.length; i++) {
-                reportData.append(data[i]).append(TEXT_LINE_DELIMITER);
+            for (Object aData : data) {
+                reportData.append(aData).append(TEXT_LINE_DELIMITER);
             }
             if (SettingsManager.getDefaultState().debug)
                 Log.e(SettingsManager.getDefaultState().debugTAG, reportData.toString());
             if (SettingsManager.getDefaultState().saveLog)
-                writeFormatedLog(reportData.toString(),ERROR);
+                writeFormatedLog(reportData.toString(), ERROR);
         }
     }
 
-
-
-    private static void writeFormatedLog(final String text ,String type)
-    {
-        FilesManager.saveTextRoundFile(SettingsManager.getDefaultState().debugFileName,type
+    private static void writeFormatedLog(final String text, String type) {
+        FilesManager.saveTextRoundFile(SettingsManager.getDefaultState().debugFileName, type
                 + getTime()
                 + text
                 + " \n");
-        if(SettingsManager.getDefaultState().debugToasts) {
+        if (SettingsManager.getDefaultState().debugToasts) {
             //Si es llamado desde un thread en bakground(como los WS) no puedo mostrar el Toast y si
             //en el callback se ejecuta código de UI tambien falla,
             //por lo que si no está en el UIthread, lo corro en UIThread
 
             try {
-                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
-                if(callback!= null)
-                {
-                    callback.onLogChanged();
+                Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
+                if (mCallback != null) {
+                    mCallback.onLogChanged();
                 }
-            }
-            catch (Exception e)
-            {
-                if(activity != null)
-                    activity.runOnUiThread(new Runnable() {
+            } catch (Exception e) {
+                if (mActivity != null)
+                    mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
-                            if(callback!= null)
-                            {
-                                callback.onLogChanged();
+                            Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
+                            if (mCallback != null) {
+                                mCallback.onLogChanged();
                             }
                         }
                     });
@@ -155,8 +147,6 @@ public class LogManager extends BaseManager{
         }
 
     }
-
-
 
     /**
      * Get the method name for a depth in call stack
@@ -192,33 +182,29 @@ public class LogManager extends BaseManager{
         return "";
     }
 
-
     static private String getTime() {
         Time now = new Time();
         now.setToNow();
-        return " ["+now.format3339(false)+"] ";
+        return " [" + now.format3339(false) + "] ";
     }
 
     public static String getLog() {
-        return FilesManager.loadText( SettingsManager.getDefaultState().debugFileName);
+        return FilesManager.loadText(SettingsManager.getDefaultState().debugFileName);
     }
 
-    public static void deleteLog()
-    {
+    public static void deleteLog() {
         FilesManager.deleteFile(SettingsManager.getDefaultState().debugFileName);
     }
 
-    public static void setCallback(OnLogChangedCallback callBack)
-    {
-        callback = callBack;
+    public static void setCallback(OnLogChangedCallback callBack) {
+        mCallback = callBack;
     }
 
     /***
      * Exporta el archivo de LOG a Documents
      */
-    public static void exportLogFile()
-    {
-        FilesManager.copyToExternalFile( SettingsManager.getDefaultState().debugFileName, Environment.getExternalStoragePublicDirectory("logs").getAbsolutePath());
+    public static void exportLogFile() {
+        FilesManager.copyToExternalFile(SettingsManager.getDefaultState().debugFileName, Environment.getExternalStoragePublicDirectory("logs").getAbsolutePath());
 
     }
 }

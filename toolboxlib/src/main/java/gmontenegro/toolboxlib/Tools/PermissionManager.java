@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by gmontenegro on 26/07/2016.
  */
-public class PermissionManager  extends BaseManager{
+public class PermissionManager extends BaseManager {
 
     final static String CAMERA = Manifest.permission.CAMERA;
     final static String CONTACTS = Manifest.permission.READ_CONTACTS;
@@ -24,16 +24,15 @@ public class PermissionManager  extends BaseManager{
     final static String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     final static String READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
 
-    public static boolean RequestPermission(@NonNull final String permission , String text)
-    {
+    public static boolean RequestPermission(@NonNull final String permission, String text) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
-        if (context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
+        if (mContext.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
-        if (activity.shouldShowRequestPermissionRationale(permission)) {
-            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        if (mActivity.shouldShowRequestPermissionRationale(permission)) {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
             alertBuilder.setCancelable(true);
             alertBuilder.setTitle("Permission necessary");
             alertBuilder.setMessage(text);
@@ -41,18 +40,19 @@ public class PermissionManager  extends BaseManager{
 
                 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                 public void onClick(DialogInterface dialog, int which) {
-                    activity.requestPermissions(new String[]{permission}, 0);}});
+                    mActivity.requestPermissions(new String[]{permission}, 0);
+                }
+            });
 
             AlertDialog alert = alertBuilder.create();
             alert.show();
         } else {
-            activity.requestPermissions(new String[]{permission}, 0);
+            mActivity.requestPermissions(new String[]{permission}, 0);
         }
         return false;
     }
 
-    public static boolean RequestMultiplePermission(@NonNull final List<String> permissions, CharSequence text)
-    {
+    public static boolean RequestMultiplePermission(@NonNull final List<String> permissions, CharSequence text) {
 
         final ArrayList<String> permissionsNeeded = new ArrayList<String>();
 
@@ -60,24 +60,24 @@ public class PermissionManager  extends BaseManager{
             return true;
         }
 
-        for (String permission: permissions) {
-            if (context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
+        for (String permission : permissions) {
+            if (mContext.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
                 permissionsNeeded.add(permission);
 
             }
 
         }
-        if(permissionsNeeded.isEmpty())
+        if (permissionsNeeded.isEmpty())
             return true;
 
 
         boolean permissionRationaleNeeded = false;
-        for (String permission: permissionsNeeded) {
-            if (activity.shouldShowRequestPermissionRationale(permission))
+        for (String permission : permissionsNeeded) {
+            if (mActivity.shouldShowRequestPermissionRationale(permission))
                 permissionRationaleNeeded = true;
         }
         if (permissionRationaleNeeded) {
-            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
             alertBuilder.setCancelable(true);
             alertBuilder.setTitle("Permission necessary");
             alertBuilder.setMessage(text);
@@ -85,34 +85,34 @@ public class PermissionManager  extends BaseManager{
 
                 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                 public void onClick(DialogInterface dialog, int which) {
-                    activity.requestPermissions((String[]) permissionsNeeded.toArray(), 0);}});
+                    mActivity.requestPermissions((String[]) permissionsNeeded.toArray(), 0);
+                }
+            });
 
             AlertDialog alert = alertBuilder.create();
             alert.show();
         } else {
-            activity.requestPermissions((String[]) permissionsNeeded.toArray(), 0);
+            mActivity.requestPermissions((String[]) permissionsNeeded.toArray(), 0);
         }
         return false;
     }
 
     public static boolean RequestCamera(@StringRes int StringRes) {
-        return RequestPermission(CAMERA, context.getResources().getString(StringRes));
+        return RequestPermission(CAMERA, mContext.getResources().getString(StringRes));
     }
 
     public static boolean RequestContacts(@StringRes int StringRes) {
-        return RequestPermission(CONTACTS , context.getResources().getString(StringRes));
+        return RequestPermission(CONTACTS, mContext.getResources().getString(StringRes));
     }
 
     public static boolean RequestLocation(@StringRes int StringRes) {
-        return RequestPermission(LOCATION, context.getResources().getString(StringRes));
+        return RequestPermission(LOCATION, mContext.getResources().getString(StringRes));
     }
 
     public static boolean RequestReadWrite(@StringRes int StringRes) {
-        return RequestMultiplePermission(Arrays.asList(WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE)
-                , context.getResources().getString(StringRes));
+        return RequestMultiplePermission(Arrays.asList(WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE)
+                , mContext.getResources().getString(StringRes));
     }
-
-
 
 
 ////////////////////////////////////////////////////////////////////////////

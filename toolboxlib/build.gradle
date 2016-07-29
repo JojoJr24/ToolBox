@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/Jojojr24/ToolBox'
     gitUrl = 'https://github.com/Jojojr24/Toolbox.git'
 
-    libraryVersion = '0.0.4'
+    libraryVersion = '0.0.5'
 
     developerId = 'Jojojr24'
     developerName = 'Montenegro Guillermo'
@@ -33,7 +33,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
-        versionName "0.0.4"
+        versionName "0.0.5"
     }
     buildTypes {
         release {
@@ -41,10 +41,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/DEPENDENCIES'
+
+    }
 
     repositories {
         maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
     }
+
 }
 
 dependencies {
@@ -58,8 +67,12 @@ dependencies {
     //////////////KSOAP
     compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
     /////////////////////////
+    //////////////RESTful
+    compile 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
+    /////////////////////////
     ///////////////BINTRAY
-    compile 'com.inthecheesefactory.thecheeselibrary:fb-like:0.9.3'
+    provided('com.inthecheesefactory.thecheeselibrary:fb-like:0.9.3')
+
     ///////////////////////////////
 }
 apply from: 'installv1.gradle'

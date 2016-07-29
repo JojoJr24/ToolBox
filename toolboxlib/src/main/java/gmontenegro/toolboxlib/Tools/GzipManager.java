@@ -13,7 +13,7 @@ import java.util.zip.GZIPOutputStream;
 /**
  * Created by GMontenegro on 25/02/16.
  */
-public class GzipManager extends BaseManager{
+public class GzipManager extends BaseManager {
 
     public static byte[] zipToByteArray(String bytes) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream(bytes.length());
@@ -26,7 +26,6 @@ public class GzipManager extends BaseManager{
 
     }
 
-
     public static byte[] zipToByteArray64(String bytes) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream(bytes.length());
         GZIPOutputStream gzip = new GZIPOutputStream(bos);
@@ -34,7 +33,7 @@ public class GzipManager extends BaseManager{
         gzip.close();
         byte[] compressed = bos.toByteArray();
         bos.close();
-        return  Base64.encode(compressed, Base64.DEFAULT);
+        return Base64.encode(compressed, Base64.DEFAULT);
 
     }
 
@@ -55,7 +54,7 @@ public class GzipManager extends BaseManager{
         BufferedReader br = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
         StringBuilder sb = new StringBuilder();
         String line;
-        while((line = br.readLine()) != null) {
+        while ((line = br.readLine()) != null) {
             sb.append(line);
         }
         br.close();

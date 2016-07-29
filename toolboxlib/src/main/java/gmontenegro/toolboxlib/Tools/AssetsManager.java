@@ -13,11 +13,11 @@ import gmontenegro.toolboxlib.R;
  */
 public class AssetsManager extends BaseManager {
 
-    public static String loadJSONFromAsset(String filename ) {
-        String json = null;
+    public static String loadJSONFromAsset(String filename) {
+        String json;
         try {
 
-            InputStream is = context.getAssets().open(filename);
+            InputStream is = mContext.getAssets().open(filename);
 
             int size = is.available();
 
@@ -31,23 +31,20 @@ public class AssetsManager extends BaseManager {
 
 
         } catch (IOException ex) {
-           LogManager.debug(ex);
+            LogManager.debug(ex);
             return null;
         }
         return json;
 
     }
 
-    public static Object loadObjectFromAsset(String filename, Type clase)
-    {
+    public static Object loadObjectFromAsset(String filename, Type clase) {
         try {
             String json = loadJSONFromAsset(filename);
             Gson gson = new Gson();
             return gson.fromJson(json, clase);
-        }
-        catch (Exception e)
-        {
-            LogManager.error(context.getString(R.string.stateAssetError),e.getMessage());
+        } catch (Exception e) {
+            LogManager.error(mContext.getString(R.string.stateAssetError), e.getMessage());
         }
         return null;
     }

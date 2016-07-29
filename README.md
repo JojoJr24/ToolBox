@@ -1,10 +1,15 @@
 ToolBox
 =======
-
 ### Version
-0.0.5
+0.0.6
 
-Para instalar hay que agregar estas lineas al gradle de la app
+
+----------
+
+Instalación
+-----------
+
+Para instalar el ToolBox hay que agregar estas lineas al gradle de la app
 ```Gradle
 repositories {
     maven {
@@ -17,9 +22,13 @@ repositories {
 ...
 
 dependencies {
-    compile 'gmontenegro:toolboxlib:0.0.4'
+    compile 'gmontenegro:toolboxlib:0.0.6'
 }
 ```
+
+
+----------
+
 
 SettingsManager
 ---------------
@@ -34,10 +43,11 @@ donde los siguientes parametros son obligatorios
   "debugToasts": "true",
   "debugMail": "true",
   "debugMailAddress": "debug@mail.com",
-  "debugLevel": 1,
-  "debugFileSize": 400,
+  "debugLevel": 3,
+  "debugFileSize": 8000,
+  "debugFileName": "appLog.txt",
   "token": "TY8x6y7u4vNpqWoN",
-  "defaultNamesapce": "http://www.example.org/sample/",
+  "defaultNamespace": "http://www.example.org/sample/",
   ...
  }
 ```
@@ -45,6 +55,10 @@ donde los siguientes parametros son obligatorios
 Si se requieren mas parametros por default deben agregarse al archivo y sobrecargar la clase
 DefaultSettings con las variables de los nuevos parametros.
 Y sobrecargar el metodo
+
+
+----------
+
 
 EncryptionManager
 -----------------
@@ -68,6 +82,10 @@ EncryptionManager.decrypt(TextoCifrado,true);
 
 Si un dato se encripta con un token, debe ser desencriptado con la mismo token, para recuperar su valor.
 Como el token de sesión se pierde al cerrar la app, los datos guardados durante la sesión no se van a poder desencriptar
+
+
+----------
+
 
 LogManager
 ----------
@@ -99,7 +117,7 @@ Tag for debugger
 **Debug**
  - true: encendido
  - false: apagado
- 
+
 **SaveLog**
  - true: Guarda un archivo con el log
  - false: No guarda el archivo
@@ -114,24 +132,25 @@ Tag for debugger
 **DebugMailAddress**
 Es la dirección por default donde se enviara el mail si *DebugMail* es true y ocurre un crash
 
-**DebugFileSize**
-Es el tamaño en Bytes del archivo de log.
-
 **DebugLevel:**
  - 0: Sin log
  - 1: Solo Errores
  - 2: Errores y Warnings
  - 3: Verbose
 
-DebugFileName
--------------
+**DebugFileSize**
+Es el tamaño en Bytes del archivo de log.
 
+**DebugFileName**
 Al invocar el siguiente método , el archivo de Log se guardara en la carpeta logs del dispositivo.
 ```Java
-LogManager.exportLogFile(); 
+LogManager.exportLogFile();
 ```
-
 En el caso de querer mostrar en pantalla el log en tiempo real se puede usar el callback *OnLogChangedCallback* que avisa en cada cambio de log, pero con el cuidado de borrarlo antes de salir del activity.
+
+
+----------
+
 
 SOAPWSManager
 -------------
@@ -149,8 +168,6 @@ public class WSMock extends SoapWSManager  {
     protected Object parseObject(Object object) {
         return object;
     }
-
-
 }
 ```
 El metodo *parseObject* va a ser invocado con la respuesta del WS, respuesta que debemos formatear y luego será enviada al callback que se definio en el constructor.
@@ -173,4 +190,54 @@ La forma de invocarlo es escribiendo el nombre del campo seguido del objeto que 
 SoapWSManager.createParameter("name1",object1,"name2",object2,...));
 
 ```
+
+RESTWSManager
+-------------
+
+Para crear una invocación a un WS REST hay que crear una clase derivada de RestWSManager:
+
+```Java
+public class RestWSMock extends RestWSManager {
+
+    public RestWSMock(@Nullable OnWebServiceResponseCallback callback, HttpMethod method, @NonNull String url, @Nullable String... parameters) {
+        super(callback, method, url, parameters);
+    }
+
+    @Override
+    protected Object parseObject(Object object) {
+        return object;
+    }
+}
+```
+
+El metodo *parseObject* va a ser invocado con la respuesta del WS, respuesta que debemos formatear y luego será enviada al callback que se definio en el constructor.
+
+Para crear el objeto encargado de llamar el WS solo hay que invocarlo de la siguiente forma:
+
+```Java
+...
+new RestWSMock(this, HttpMethod.GET, "http://181.28.148.111:8091/webrtc/chatrooms"
+                , "user", "175"
+                , "deviceToken", "3859abd9")
+
+                .initHeaders("Accept", "application/json",
+                        "Content-Type", "application/json")
+                .initBody("Color" , "Verde",
+                        "Largo" , "1")
+                .execute(true);
+...
+```
+Al constructor hay que enviarle los datos basicos.
+Con el método:
+```Java
+ initHeader(String... Datos)
+
+```
+se inicializa el header. Se deben pasar los nombres y valores de forma alternada.
+Con el método:
+```Java
+ initBody(String... Datos)
+
+```
+se inicializa el body. Se deben pasar los nombres y valores de forma alternada.
 

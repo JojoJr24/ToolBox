@@ -3,26 +3,23 @@ package gmontenegro.toolboxlib.Tools;
 /**
  * Created by gmontenegro on 26/07/2016.
  */
-public class SettingsManager extends BaseManager{
+public class SettingsManager extends BaseManager {
 
-    private static Object state;
-    protected static Class clase;
+    protected static Class mClase;
+    private static Object mState;
 
     public static Object getState()//Una vez ejecutado con un context, guarda el dato
     {
-        if(context != null)
-        {
-            state =  AssetsManager.loadObjectFromAsset("stateAsset", clase);
+        if (mContext != null) {
+            mState = AssetsManager.loadObjectFromAsset("stateAsset", mClase);
 
         }
-        return state;
+        return mState;
     }
 
-    public static DefaultSettings getDefaultState()
-    {
-        clase = DefaultSettings.class;
+    public static DefaultSettings getDefaultState() {
+        mClase = DefaultSettings.class;
         return ((DefaultSettings) getState());
     }
-
 
 }

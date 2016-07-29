@@ -3,7 +3,6 @@ package gmontenegro.toolboxlib.Tools;
 import android.util.Base64;
 
 import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
@@ -15,7 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * Created by gmontenegro on 26/07/2016.
  */
-public class EncryptionManager extends BaseManager{
+public class EncryptionManager extends BaseManager {
 
 
     //AESCrypt-ObjC uses CBC and PKCS7Padding
@@ -27,8 +26,6 @@ public class EncryptionManager extends BaseManager{
 
     //AESCrypt-ObjC uses blank IV (not the best security, but the aim here is compatibility)
     private static final byte[] ivBytes = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-
-
 
 
     /**
@@ -52,23 +49,21 @@ public class EncryptionManager extends BaseManager{
     /**
      * Encrypt and encode message using 256-bit AES with key generated from password.
      *
-     * @param message  the thing you want to encrypt assumed String UTF-8
+     * @param message the thing you want to encrypt assumed String UTF-8
      * @return Base64 encoded CipherText
-     * @throws GeneralSecurityException if problems occur during encryption
      */
     public static String encrypt(String message) {
-        return encrypt(message,false);
+        return encrypt(message, false);
     }
 
     /**
      * Encrypt and encode message using 256-bit AES with key generated from password.
      *
-     * @param message  the thing you want to encrypt assumed String UTF-8
+     * @param message      the thing you want to encrypt assumed String UTF-8
      * @param isForSession if true, use the session token
      * @return Base64 encoded CipherText
-     * @throws GeneralSecurityException if problems occur during encryption
      */
-    public static String encrypt(String message , boolean isForSession) {
+    public static String encrypt(String message, boolean isForSession) {
 
         try {
             final SecretKeySpec key = generateKey(getToken(isForSession));
@@ -95,7 +90,6 @@ public class EncryptionManager extends BaseManager{
      * @param iv      Initiation Vector
      * @param message in bytes (assumed it's already been decoded)
      * @return Encrypted cipher text (not encoded)
-     * @throws GeneralSecurityException if something goes wrong during encryption
      */
     public static byte[] encrypt(final SecretKeySpec key, final byte[] iv, final byte[] message) {
         try {
@@ -119,19 +113,17 @@ public class EncryptionManager extends BaseManager{
      *
      * @param base64EncodedCipherText the encrpyted message encoded with base64
      * @return message in Plain text (String UTF-8)
-     * @throws GeneralSecurityException if there's an issue decrypting
      */
     public static String decrypt(String base64EncodedCipherText) {
-       return decrypt(base64EncodedCipherText,false);
+        return decrypt(base64EncodedCipherText, false);
     }
 
     /**
      * Decrypt and decode ciphertext using 256-bit AES with key generated from password
      *
      * @param base64EncodedCipherText the encrpyted message encoded with base64
-     * @param isForSession if true, use the session token
+     * @param isForSession            if true, use the session token
      * @return message in Plain text (String UTF-8)
-     * @throws GeneralSecurityException if there's an issue decrypting
      */
     public static String decrypt(String base64EncodedCipherText, boolean isForSession) {
 
@@ -165,7 +157,6 @@ public class EncryptionManager extends BaseManager{
      * @param iv                Initiation Vector
      * @param decodedCipherText in bytes (assumed it's already been decoded)
      * @return Decrypted message cipher text (not encoded)
-     * @throws GeneralSecurityException if something goes wrong during encryption
      */
     public static byte[] decrypt(final SecretKeySpec key, final byte[] iv, final byte[] decodedCipherText) {
         try {
@@ -212,18 +203,16 @@ public class EncryptionManager extends BaseManager{
     }
 
 
-    protected static String generateRandomToken()
-    {
+    protected static String generateRandomToken() {
 
         final String alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         final int N = alphabet.length();
         Random r = new Random();
-        final int lenght = r.nextInt(8)+8;
+        final int lenght = r.nextInt(8) + 8;
         String ret = "";
 
 
-
-        for(int j = 0 ; j < lenght ; j++ ) {
+        for (int j = 0; j < lenght; j++) {
             for (int i = 0; i < 50; i++) {
                 ret = ret + alphabet.charAt(r.nextInt(N));
             }
@@ -232,36 +221,27 @@ public class EncryptionManager extends BaseManager{
         return ret;
     }
 
-    public static void initSessionToken()
-    {
+    public static void initSessionToken() {
         setToken("");
     }
 
-    private static String getToken(boolean isSessionToken)
-    {
-        if(isSessionToken)
-        {
+    private static String getToken(boolean isSessionToken) {
+        if (isSessionToken) {
             String ret = StoreManager.pullString("tok");
-            if(ret.equals(""))
-            {
+            if (ret.equals("")) {
                 String tok = EncryptionManager.generateRandomToken();
                 setToken(tok);
                 return tok;
-            }
-            else
-            {
+            } else {
                 return ret;
             }
-        }
-        else
-        {
+        } else {
             return SettingsManager.getDefaultState().token;
         }
 
     }
 
-    private static void setToken(String token)
-    {
-        StoreManager.putString("tok",token);
+    private static void setToken(String token) {
+        StoreManager.putString("tok", token);
     }
 }

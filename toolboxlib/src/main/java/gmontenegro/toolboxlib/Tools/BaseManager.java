@@ -9,24 +9,21 @@ import android.widget.Toast;
  */
 public class BaseManager {
 
-    protected static Activity activity;
-    protected static Context context;
+    protected static Activity mActivity;
+    protected static Context mContext;
 
 
-
-    public static void initManagers(Activity pActivity)
-    {
+    public static void initManagers(Activity activity) {
         //Como hay cosas que necesitan activity y otras context,
         //pruebo iniciar ambas
-        activity = pActivity;
-        context = pActivity;
+        mActivity = activity;
+        mContext = activity;
         initLog();
 
     }
 
-    public static void initManagers(Context pContext)
-    {
-        context = pContext;
+    public static void initManagers(Context context) {
+        mContext = context;
         initLog();
     }
 
@@ -34,28 +31,21 @@ public class BaseManager {
     private static void initLog() {
         //Lo borro para disminuir los riesgos de que quede cargado y sea llamado cuando ya no existe
         //el activity
-        LogManager.callback = null;
-        if(SettingsManager.getDefaultState().debugToasts)
-        {
-            Toast.makeText(context,context.getClass().getCanonicalName(),Toast.LENGTH_SHORT).show();
+        LogManager.mCallback = null;
+        if (SettingsManager.getDefaultState().debugToasts) {
+            Toast.makeText(mContext, mContext.getClass().getCanonicalName(), Toast.LENGTH_SHORT).show();
         }
-        if(SettingsManager.getDefaultState().debugLevel >= LogManager.LEVEL_ERRORS)
-        {
-            new TopExceptionHandler(context,SettingsManager.getDefaultState().debugMail);
+        if (SettingsManager.getDefaultState().debugLevel >= LogManager.LEVEL_ERRORS) {
+            new TopExceptionHandler(SettingsManager.getDefaultState().debugMail);
         }
         //Si hubo un crash grave se guardo el reporte en el sharedpreferences, por lo que al inicio
         //levanto los posibles crashes y, si el envio por mail está activado , lo envio
         String possibleCrash = StoreManager.pullString("crash");
-        if(!possibleCrash.equals(""))
-        {
-            OtherAppsConnectionManager.sendMail("Stack",possibleCrash,SettingsManager.getDefaultState().debugMailAddress);
+        if (!possibleCrash.equals("")) {
+            OtherAppsConnectionManager.sendMail("Stack", possibleCrash, SettingsManager.getDefaultState().debugMailAddress);
             StoreManager.removeObject("crash");
         }
     }
-
-
-
-
 
 
 }

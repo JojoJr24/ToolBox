@@ -8,17 +8,16 @@ import android.widget.Toast;
  */
 public class OtherAppsConnectionManager extends BaseManager {
 
-    public static void sendMail(String subject, String body , String... to )
-    {
+    public static void sendMail(String subject, String body, String... to) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL  , to);
+        i.putExtra(Intent.EXTRA_EMAIL, to);
         i.putExtra(Intent.EXTRA_SUBJECT, subject);
-        i.putExtra(Intent.EXTRA_TEXT   , body);
+        i.putExtra(Intent.EXTRA_TEXT, body);
         try {
-            context.startActivity(Intent.createChooser(i, "Send mail..."));
+            mContext.startActivity(Intent.createChooser(i, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(context, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         }
     }
 }

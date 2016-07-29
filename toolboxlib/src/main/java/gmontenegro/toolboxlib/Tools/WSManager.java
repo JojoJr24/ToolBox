@@ -7,22 +7,14 @@ public class WSManager extends BaseManager implements OnWebServiceResponseCallba
 
     protected final OnWebServiceResponseCallback mCallback;
 
-
-
-
-    protected WSManager(OnWebServiceResponseCallback callback )
-    {
-        if(callback == null)
+    protected WSManager(OnWebServiceResponseCallback callback) {
+        if (callback == null)
             mCallback = this;
         else
             mCallback = callback;
     }
 
-
-    protected void execute(boolean async)
-    {
-
-
+    protected void execute(boolean async) {
     }
 
     @Override
