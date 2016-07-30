@@ -39,22 +39,23 @@ public class MainActivity extends BaseActivity implements OnWebServiceResponseCa
 
     }
 
+    public void callWSREST(View v) {
+        new RestWSMock(this, HttpMethod.GET, "http://192.168.1127.111:8080/user/"
+                , "user", "175"
+                , "deviceToken", "Token")
+                .initHeaders("Accept", "application/json",
+                        "Content-Type", "application/json")
+                .initBody("Color" , "Verde",
+                        "Largo" , "1")
+                .execute(true);
+
+    }
+
     public void callWSSoap(View v) {
         new SoapWSMock(this,
                 "http://192.168.127.56:8088/mockSampleServiceSoapBinding",
                 "login",
                 SoapWSManager.createParameter("username", "Login", "password", "Login123")).execute(true);
-
-    }
-
-    public void callWSREST(View v) {
-        new RestWSMock(this, HttpMethod.GET, "http://181.28.148.111:8091/webrtc/chatrooms"
-                , "user", "175"
-                , "deviceToken", "3859abd9")
-
-                .initHeaders("Accept", "application/json",
-                        "Content-Type", "application/json")
-                .execute(true);
 
     }
 
