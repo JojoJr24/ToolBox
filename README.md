@@ -151,6 +151,56 @@ En el caso de querer mostrar en pantalla el log en tiempo real se puede usar el 
 
 ----------
 
+RESTWSManager
+-------------
+
+Para crear una invocación a un WS REST hay que crear una clase derivada de RestWSManager:
+
+```Java
+public class RestWSMock extends RestWSManager {
+
+    public RestWSMock(@Nullable OnWebServiceResponseCallback callback, HttpMethod method, @NonNull String url, @Nullable String... parameters) {
+        super(callback, method, url, parameters);
+    }
+
+    @Override
+    protected Object parseObject(Object object) {
+        return object;
+    }
+}
+```
+
+El metodo *parseObject* va a ser invocado con la respuesta del WS, respuesta que debemos formatear y luego será enviada al callback que se definio en el constructor.
+
+Para crear el objeto encargado de llamar el WS solo hay que invocarlo de la siguiente forma:
+
+```Java
+...
+new RestWSMock(this, HttpMethod.GET, "http://192.168.1127.111:8080/user/"
+                , "user", "175"
+                , "deviceToken", "Token")
+
+                .initHeaders("Accept", "application/json",
+                        "Content-Type", "application/json")
+                .initBody("Color" , "Verde",
+                        "Largo" , "1")
+                .execute(true);
+...
+```
+Al constructor hay que enviarle los datos basicos.
+Con el método:
+```Java
+ initHeader(String... Datos)
+
+```
+se inicializa el header. Se deben pasar los nombres y valores de forma alternada.
+Con el método:
+```Java
+ initBody(String... Datos)
+
+```
+se inicializa el body. Se deben pasar los nombres y valores de forma alternada.
+----------
 
 SOAPWSManager
 -------------
@@ -191,53 +241,5 @@ SoapWSManager.createParameter("name1",object1,"name2",object2,...));
 
 ```
 
-RESTWSManager
--------------
 
-Para crear una invocación a un WS REST hay que crear una clase derivada de RestWSManager:
-
-```Java
-public class RestWSMock extends RestWSManager {
-
-    public RestWSMock(@Nullable OnWebServiceResponseCallback callback, HttpMethod method, @NonNull String url, @Nullable String... parameters) {
-        super(callback, method, url, parameters);
-    }
-
-    @Override
-    protected Object parseObject(Object object) {
-        return object;
-    }
-}
-```
-
-El metodo *parseObject* va a ser invocado con la respuesta del WS, respuesta que debemos formatear y luego será enviada al callback que se definio en el constructor.
-
-Para crear el objeto encargado de llamar el WS solo hay que invocarlo de la siguiente forma:
-
-```Java
-...
-new RestWSMock(this, HttpMethod.GET, "http://181.28.148.111:8091/webrtc/chatrooms"
-                , "user", "175"
-                , "deviceToken", "3859abd9")
-
-                .initHeaders("Accept", "application/json",
-                        "Content-Type", "application/json")
-                .initBody("Color" , "Verde",
-                        "Largo" , "1")
-                .execute(true);
-...
-```
-Al constructor hay que enviarle los datos basicos.
-Con el método:
-```Java
- initHeader(String... Datos)
-
-```
-se inicializa el header. Se deben pasar los nombres y valores de forma alternada.
-Con el método:
-```Java
- initBody(String... Datos)
-
-```
-se inicializa el body. Se deben pasar los nombres y valores de forma alternada.
 
