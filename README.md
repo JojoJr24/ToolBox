@@ -200,6 +200,7 @@ Con el método:
 
 ```
 se inicializa el body. Se deben pasar los nombres y valores de forma alternada.
+
 ----------
 
 SOAPWSManager
