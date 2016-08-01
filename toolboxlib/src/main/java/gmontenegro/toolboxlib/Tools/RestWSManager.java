@@ -28,6 +28,12 @@ public abstract class RestWSManager extends WSManager {
     private final LinkedHashMap<String, String> mHeaders = new LinkedHashMap<String, String>();
     private final MultiValueMap<String, String> mBody = new LinkedMultiValueMap<String, String>();
 
+
+    protected RestWSManager(@Nullable OnWebServiceResponseCallback callback, HttpMethod method,  @Nullable String... parameters) {
+        this(callback,method,SettingsManager.getDefaultState().defaultNamespace,parameters);
+    }
+
+
     protected RestWSManager(@Nullable OnWebServiceResponseCallback callback, HttpMethod method, @NonNull String url, @Nullable String... parameters) {
         super(callback);
         this.mCallback = callback;
