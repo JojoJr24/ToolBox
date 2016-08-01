@@ -1,7 +1,7 @@
 ToolBox
 =======
 ### Version
-0.0.6
+0.0.5
 
 
 ----------
@@ -22,7 +22,7 @@ repositories {
 ...
 
 dependencies {
-    compile 'gmontenegro:toolboxlib:0.0.6'
+    compile 'gmontenegro:toolboxlib:0.0.5'
 }
 ```
 
