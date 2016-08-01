@@ -20,19 +20,21 @@ import java.util.Map;
  */
 public abstract class SoapWSManager extends WSManager {
 
+
     private final String mUrlAmbiente;
     private final String mMethodName;
     private final String mNamespace;
     private final LinkedHashMap mParamsValues;
 
-    protected SoapWSManager(@Nullable OnWebServiceResponseCallback callback, @NonNull String urlAmbiente, @NonNull String methodName,
+    protected SoapWSManager(int wsId, @Nullable OnWebServiceResponseCallback callback, @NonNull String urlAmbiente, @NonNull String methodName,
                             @NonNull LinkedHashMap paramsValues) {
-        this(callback, urlAmbiente, SettingsManager.getDefaultState().defaultNamespace, methodName, paramsValues);
+        this(wsId,callback, urlAmbiente, SettingsManager.getDefaultState().defaultNamespace, methodName, paramsValues);
     }
 
-    protected SoapWSManager(@Nullable OnWebServiceResponseCallback callback, @NonNull String urlAmbiente, @NonNull String namespace, @NonNull String methodName,
+    protected SoapWSManager(int wsId,@Nullable OnWebServiceResponseCallback callback, @NonNull String urlAmbiente, @NonNull String namespace, @NonNull String methodName,
                             @NonNull LinkedHashMap paramsValues) {
         super(callback);
+        this.mWsId = wsId;
         this.mUrlAmbiente = urlAmbiente;
         this.mMethodName = methodName;
         this.mParamsValues = paramsValues;
@@ -138,10 +140,10 @@ public abstract class SoapWSManager extends WSManager {
             @Override
             protected void onPostExecute(Object o) {
                 if (o instanceof String) {
-                    mCallback.onWebServiceFail(((String) o));
+                    mCallback.onWebServiceFail(mWsId,((String) o));
                 } else {
                     Object ret = parseObject(o);
-                    mCallback.onWebServiceResponse(ret);
+                    mCallback.onWebServiceResponse(mWsId,ret);
                 }
             }
 

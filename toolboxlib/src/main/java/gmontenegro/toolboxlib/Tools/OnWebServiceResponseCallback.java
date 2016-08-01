@@ -5,7 +5,7 @@ package gmontenegro.toolboxlib.Tools;
  */
 public interface OnWebServiceResponseCallback {
 
-    void onWebServiceResponse(Object response);
+    void onWebServiceResponse(int wsId,Object response);
 
-    void onWebServiceFail(String e);
+    void onWebServiceFail(int wsId,String e);
 }

@@ -29,13 +29,14 @@ public abstract class RestWSManager extends WSManager {
     private final MultiValueMap<String, String> mBody = new LinkedMultiValueMap<String, String>();
 
 
-    protected RestWSManager(@Nullable OnWebServiceResponseCallback callback, HttpMethod method,  @Nullable String... parameters) {
-        this(callback,method,SettingsManager.getDefaultState().defaultNamespace,parameters);
+    protected RestWSManager(int wsId,@Nullable OnWebServiceResponseCallback callback, HttpMethod method,  @Nullable String... parameters) {
+        this(wsId,callback,method,SettingsManager.getDefaultState().defaultNamespace,parameters);
     }
 
 
-    protected RestWSManager(@Nullable OnWebServiceResponseCallback callback, HttpMethod method, @NonNull String url, @Nullable String... parameters) {
+    protected RestWSManager(int wsId,@Nullable OnWebServiceResponseCallback callback, HttpMethod method, @NonNull String url, @Nullable String... parameters) {
         super(callback);
+        this.mWsId = wsId;
         this.mCallback = callback;
         this.mUrl = url;
         this.mMethod = method;
@@ -127,10 +128,10 @@ public abstract class RestWSManager extends WSManager {
             protected void onPostExecute(Object o) {
 
                 if (o instanceof String) {
-                    mCallback.onWebServiceFail(((String) o));
+                    mCallback.onWebServiceFail(mWsId,((String) o));
                 } else {
                     Object ret = parseObject(o);
-                    mCallback.onWebServiceResponse(ret);
+                    mCallback.onWebServiceResponse(mWsId,ret);
                 }
             }
 

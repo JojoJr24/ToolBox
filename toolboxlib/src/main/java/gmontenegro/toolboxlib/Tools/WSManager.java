@@ -6,6 +6,7 @@ package gmontenegro.toolboxlib.Tools;
 public class WSManager extends BaseManager implements OnWebServiceResponseCallback {
 
     protected final OnWebServiceResponseCallback mCallback;
+    protected int mWsId = 0;
 
     protected WSManager(OnWebServiceResponseCallback callback) {
         if (callback == null)
@@ -17,14 +18,15 @@ public class WSManager extends BaseManager implements OnWebServiceResponseCallba
     protected void execute(boolean async) {
     }
 
+
     @Override
-    public void onWebServiceResponse(Object response) {
+    public void onWebServiceResponse(int wsId, Object response) {
         LogManager.debug(response);
     }
 
+
     @Override
-    public void onWebServiceFail(String e) {
+    public void onWebServiceFail(int wsId, String e) {
 
     }
-
 }

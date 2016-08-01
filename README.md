@@ -1,7 +1,7 @@
 ToolBox
 =======
 ### Version
-0.0.5
+0.0.7
 
 
 ----------
@@ -22,7 +22,7 @@ repositories {
 ...
 
 dependencies {
-    compile 'gmontenegro:toolboxlib:0.0.5'
+    compile 'gmontenegro:toolboxlib:0.0.7'
 }
 ```
 
@@ -159,7 +159,7 @@ Para crear una invocación a un WS REST hay que crear una clase derivada de Rest
 ```Java
 public class RestWSMock extends RestWSManager {
 
-    public RestWSMock(@Nullable OnWebServiceResponseCallback callback, HttpMethod method, @NonNull String url, @Nullable String... parameters) {
+    public RestWSMock(int wsID,@Nullable OnWebServiceResponseCallback callback, HttpMethod method, @NonNull String url, @Nullable String... parameters) {
         super(callback, method, url, parameters);
     }
 
@@ -176,7 +176,7 @@ Para crear el objeto encargado de llamar el WS solo hay que invocarlo de la sigu
 
 ```Java
 ...
-new RestWSMock(this, HttpMethod.GET, "http://192.168.1127.111:8080/user/"
+new RestWSMock(id, this, HttpMethod.GET, "http://192.168.1127.111:8080/user/"
                 , "user", "175"
                 , "deviceToken", "Token")
 
@@ -211,7 +211,7 @@ Para crear una invocación a un WS SOAP hay que crear una clase derivada de SOAP
 ```Java
 public class WSMock extends SoapWSManager  {
 
-    public WSMock(OnWebServiceResponseCallback callback, String urlAmbiente, String methodName, LinkedHashMap paramsValues) {
+    public WSMock(int wsID, OnWebServiceResponseCallback callback, String urlAmbiente, String methodName, LinkedHashMap paramsValues) {
         super(callback, urlAmbiente, methodName, paramsValues);
     }
 
@@ -227,7 +227,7 @@ Para crear el objeto encargado de llamar el WS solo hay que invocarlo de la sigu
 
 ```Java
 ...
-new WSMock(this,
+new WSMock(wsID ,this,
                 "http://192.168.127.56:8088/mockSampleServiceSoapBinding",
                 "login",
                 SoapWSManager.createParameter("username","Login","password","Login123"));
