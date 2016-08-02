@@ -3,7 +3,7 @@ package gmontenegro.toolboxlib.Tools;
 /**
  * Created by gmontenegro on 26/07/2016.
  */
-public class WSManager extends BaseManager implements OnWebServiceResponseCallback {
+public abstract class WSManager extends BaseManager implements OnWebServiceResponseCallback {
 
     protected final OnWebServiceResponseCallback mCallback;
     protected int mWsId = 0;
@@ -17,6 +17,15 @@ public class WSManager extends BaseManager implements OnWebServiceResponseCallba
 
     protected void execute(boolean async) {
     }
+
+    /**
+     * Parser de la respuesta del WS
+     *
+
+     * @param object El objeto que respondio el WS
+     * @return El objeto despues de ser Parseado
+     */
+    protected abstract Object parseObject(Object object) throws Exception;
 
 
     @Override

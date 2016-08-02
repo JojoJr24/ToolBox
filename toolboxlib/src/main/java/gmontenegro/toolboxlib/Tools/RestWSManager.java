@@ -130,8 +130,15 @@ public abstract class RestWSManager extends WSManager {
                 if (o instanceof String) {
                     mCallback.onWebServiceFail(mWsId,((String) o));
                 } else {
-                    Object ret = parseObject(o);
-                    mCallback.onWebServiceResponse(mWsId,ret);
+                    try {
+                        Object ret = parseObject(o);
+                        mCallback.onWebServiceResponse(mWsId,ret);
+                    }
+                    catch (Exception e)
+                    {
+                        mCallback.onWebServiceFail(mWsId,e.getMessage());
+                    }
+
                 }
             }
 
@@ -142,14 +149,7 @@ public abstract class RestWSManager extends WSManager {
             task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
     }
 
-    /**
-     * Parser de la respuesta del WS
-     *
 
-     * @param object El objeto que respondio el WS
-     * @return El objeto despues de ser Parseado
-     */
-    protected abstract Object parseObject(Object object);
 
 
 }
